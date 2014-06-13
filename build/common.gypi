@@ -21,13 +21,6 @@
             # Whether we're building a ChromeOS build.
             'chromeos%': 0,
 
-            # Whether or not we are using the Aura windowing framework.
-            ['OS=="win"', {
-              'use_aura%': 1,
-            }, {
-              'use_aura%': 0,
-            }],
-
             # Whether or not we are building the Ash shell.
             'use_ash%': 0,
 
@@ -41,6 +34,13 @@
             'embedded%': 0,
 
             'conditions': [
+              # Whether or not we are using the Aura windowing framework.
+              ['OS=="win"', {
+                'use_aura%': 1,
+              }, {
+                'use_aura%': 0,
+              }],
+
               # Compute the architecture that we're building on.
               ['OS=="win" or OS=="mac" or OS=="ios"', {
                 'host_arch%': 'ia32',
