@@ -22,7 +22,11 @@
             'chromeos%': 0,
 
             # Whether or not we are using the Aura windowing framework.
-            'use_aura%': 0,
+            ['OS=="win"', {
+              'use_aura%': 1,
+            }, {
+              'use_aura%': 0,
+            }],
 
             # Whether or not we are building the Ash shell.
             'use_ash%': 0,
