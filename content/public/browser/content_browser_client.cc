@@ -287,6 +287,10 @@ bool ContentBrowserClient::IsFastShutdownPossible() {
   return true;
 }
 
+SkColor ContentBrowserClient::GetBaseBackgroundColor(RenderViewHost* rvh) {
+  return SK_ColorWHITE;
+}
+
 base::FilePath ContentBrowserClient::GetDefaultDownloadDirectory() {
   return base::FilePath();
 }

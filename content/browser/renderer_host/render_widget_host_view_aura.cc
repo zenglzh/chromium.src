@@ -1625,8 +1625,10 @@ void RenderWidgetHostViewAura::OnPaint(gfx::Canvas* canvas) {
   // For non-opaque windows, we don't draw anything, since we depend on the
   // canvas coming from the compositor to already be initialized as
   // transparent.
-  if (window_->layer()->fills_bounds_opaquely())
-    canvas->DrawColor(SK_ColorWHITE);
+  if (window_->layer()->fills_bounds_opaquely()) {
+    canvas->DrawColor(GetContentClient()->browser()->GetBaseBackgroundColor(
+                      RenderViewHost::From(host_)));
+  }
 }
 
 void RenderWidgetHostViewAura::OnDeviceScaleFactorChanged(

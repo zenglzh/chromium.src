@@ -528,7 +528,7 @@ RenderWidgetHostViewMac::RenderWidgetHostViewMac(RenderWidgetHost* widget)
   // draw.
   background_layer_.reset([[CALayer alloc] init]);
   [background_layer_
-      setBackgroundColor:CGColorGetConstantColor([cocoa_view() isOpaque] || !content::g_support_transparency ? kCGColorWhite : kCGColorClear)];
+      setBackgroundColor:CGColorGetConstantColor([cocoa_view() isOpaque] || !content::g_support_transparency ? kCGColorClear : kCGColorClear)];
   [cocoa_view_ setLayer:background_layer_];
   [cocoa_view_ setWantsLayer:YES];
 

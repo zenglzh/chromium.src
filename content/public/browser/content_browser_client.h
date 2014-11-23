@@ -30,6 +30,7 @@
 #include "net/url_request/url_request_interceptor.h"
 #include "net/url_request/url_request_job_factory.h"
 #include "third_party/WebKit/public/platform/WebNotificationPermission.h"
+#include "third_party/skia/include/core/SkColor.h"
 #include "ui/base/window_open_disposition.h"
 #include "webkit/browser/fileapi/file_system_context.h"
 
@@ -555,6 +556,9 @@ class CONTENT_EXPORT ContentBrowserClient {
 
   // Clears browser cookies.
   virtual void ClearCookies(RenderViewHost* rvh) {}
+
+  // Returns the base background color.
+  virtual SkColor GetBaseBackgroundColor(RenderViewHost* rvh);
 
   // Returns the default download directory.
   // This can be called on any thread.

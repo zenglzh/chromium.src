@@ -271,7 +271,7 @@ void CompositingIOSurfaceLayerHelper::EndPumpingFrames() {
   TRACE_EVENT0("browser", "CompositingIOSurfaceLayer::drawInCGLContext");
 
   if (!iosurface_->HasIOSurface() || context_->cgl_context() != glContext) {
-    glClearColor(1, 1, 1, 1);
+    glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
     return;
   }

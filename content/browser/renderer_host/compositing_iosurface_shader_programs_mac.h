@@ -48,6 +48,8 @@ class CompositingIOSurfaceShaderPrograms {
     return rgb_to_yv12_output_format_;
   }
 
+  static void SetBackgroundColor(float r, float g, float b);
+
  protected:
   FRIEND_TEST_ALL_PREFIXES(CompositingIOSurfaceTransformerTest,
                            TransformsRGBToYV12);

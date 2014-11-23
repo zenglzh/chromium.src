@@ -350,7 +350,7 @@ bool CompositingIOSurfaceMac::DrawIOSurface(
     glUseProgram(0); CHECK_AND_SAVE_GL_ERROR();
   } else {
     // Should match the clear color of RenderWidgetHostViewMac.
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
   }
 

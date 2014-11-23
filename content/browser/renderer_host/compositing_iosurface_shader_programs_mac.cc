@@ -11,6 +11,7 @@
 #include "base/debug/trace_event.h"
 #include "base/logging.h"
 #include "base/memory/scoped_ptr.h"
+#include "base/strings/stringprintf.h"
 #include "base/values.h"
 #include "content/browser/gpu/gpu_data_manager_impl.h"
 #include "gpu/config/gpu_driver_bug_workaround_type.h"
@@ -58,6 +59,7 @@ const char kfsBlit[] = GLSL_PROGRAM_AS_STRING(
     }
 );
 
+float bgcolor[] = {1.0f, 1.0f, 1.0f};
 
 // Only calculates position.
 const char kvsSolidWhite[] = GLSL_PROGRAM_AS_STRING(
@@ -245,6 +247,16 @@ GLuint CompileShaderGLSL(ShaderProgram shader_program, GLenum shader_type,
   const GLuint shader = glCreateShader(shader_type);
   DCHECK_NE(shader, 0u);
 
+  // Support customization of the background color.
+  std::string bg_shader;
+  if (shader_program == SHADER_PROGRAM_SOLID_WHITE &&
+      shader_type == GL_FRAGMENT_SHADER) {
+    bg_shader = base::StringPrintf(
+        "void main() { gl_FragColor = vec4(%f, %f, %f, 1.0); }",
+        bgcolor[0], bgcolor[1], bgcolor[2]);
+    kFragmentShaderSourceCodeMap[shader_program] = bg_shader.c_str();
+  }
+
   // Select and compile the shader program source code.
   if (shader_type == GL_VERTEX_SHADER) {
     const GLchar* source_snippets[] = {
@@ -418,6 +430,14 @@ void CompositingIOSurfaceShaderPrograms::SetOutputFormatForTesting(
     GLenum format) {
   rgb_to_yv12_output_format_ = format;
   Reset();
+}
+
+// static
+void CompositingIOSurfaceShaderPrograms::SetBackgroundColor(
+    float r, float g, float b) {
+  bgcolor[0] = r;
+  bgcolor[1] = g;
+  bgcolor[2] = b;
 }
 
 GLuint CompositingIOSurfaceShaderPrograms::GetShaderProgram(int which) {
