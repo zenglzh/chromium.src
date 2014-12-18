@@ -4,12 +4,30 @@
 
 #import "media/video/capture/mac/video_capture_device_avfoundation_mac.h"
 
+#import <CoreMediaIO/CMIOHardware.h>
 #import <CoreVideo/CoreVideo.h>
 
 #include "base/logging.h"
 #include "base/mac/foundation_util.h"
 #include "media/video/capture/mac/video_capture_device_mac.h"
 #include "ui/gfx/size.h"
+
+static void AllowScreenCaptureDevices() {
+  // The following enum was added to CMIOHardwareSystem.h in 10.10 SDK
+  // When the default SDK becomes >= 10.10, you can remove the enum.
+  enum {kCMIOHardwarePropertyAllowScreenCaptureDevices = 'yes '};
+
+  CMIOObjectPropertyAddress prop = {kCMIOHardwarePropertyAllowScreenCaptureDevices,
+                                    kCMIOObjectPropertyScopeGlobal,
+                                    kCMIOObjectPropertyElementMaster};
+  UInt32 allow = 1;
+  CMIOObjectSetPropertyData(kCMIOObjectSystemObject,
+                            &prop,
+                            0,
+                            NULL,
+                            sizeof(allow),
+                            &allow);
+}
 
 @implementation VideoCaptureDeviceAVFoundation
 
@@ -93,6 +111,8 @@
 #pragma mark Public methods
 
 - (id)initWithFrameReceiver:(media::VideoCaptureDeviceMac*)frameReceiver {
+  AllowScreenCaptureDevices();
+
   if ((self = [super init])) {
     DCHECK(main_thread_checker_.CalledOnValidThread());
     DCHECK(frameReceiver);
