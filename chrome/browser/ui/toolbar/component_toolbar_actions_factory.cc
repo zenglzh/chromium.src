@@ -45,11 +45,13 @@ ComponentToolbarActionsFactory::GetComponentToolbarActions() {
   // should be okay. If this changes, we should rethink this design to have,
   // e.g., RegisterChromeAction().
 
+#if defined(NWJS_SDK)
 #if defined(ENABLE_MEDIA_ROUTER)
   if (base::CommandLine::ForCurrentProcess()->HasSwitch(
           ::switches::kEnableMediaRouter)) {
     component_actions.push_back(new MediaRouterAction());
   }
+#endif
 #endif
 
   return component_actions.Pass();

@@ -46,6 +46,16 @@
 #endif  // defined(ENABLE_PRINT_PREVIEW)
 #endif  // defined(ENABLE_PRINTING)
 
+
+#include "extensions/browser/process_manager.h"
+#include "chrome/browser/ui/apps/chrome_app_window_client.h"
+#include "extensions/browser/app_window/app_window.h"
+#include "extensions/browser/app_window/app_window_contents.h"
+#include "content/public/common/renderer_preferences.h"
+
+#include "content/nw/src/nw_base.h"
+#include "content/nw/src/nw_content.h"
+
 namespace {
 
 // Time to wait for an app window to show before allowing Chrome to quit.
@@ -169,6 +179,7 @@ ChromeAppDelegate::ChromeAppDelegate(scoped_ptr<ScopedKeepAlive> keep_alive)
       is_hidden_(true),
       keep_alive_(keep_alive.Pass()),
       new_window_contents_delegate_(new NewWindowContentsDelegate()),
+      web_contents_(nullptr),
       weak_factory_(this) {
   registrar_.Add(this,
                  chrome::NOTIFICATION_APP_TERMINATING,
@@ -185,6 +196,8 @@ void ChromeAppDelegate::DisableExternalOpenForTesting() {
 }
 
 void ChromeAppDelegate::InitWebContents(content::WebContents* web_contents) {
+  web_contents_ = web_contents;
+
   favicon::CreateContentFaviconDriverForWebContents(web_contents);
 
 #if defined(ENABLE_PRINTING)
@@ -240,11 +253,33 @@ void ChromeAppDelegate::AddNewContents(content::BrowserContext* context,
                                        bool user_gesture,
                                        bool* was_blocked) {
   if (!disable_external_open_for_testing_) {
+#if 0
     // We don't really want to open a window for |new_contents|, but we need to
     // capture its intended navigation. Here we give ownership to the
     // NewWindowContentsDelegate, which will dispose of the contents once
     // a navigation is captured.
     new_contents->SetDelegate(new_window_contents_delegate_.get());
+#else
+    extensions::ProcessManager* process_manager = extensions::ProcessManager::Get(context);
+    const extensions::Extension* extension =
+      process_manager->GetExtensionForWebContents(web_contents_);
+    extensions::AppWindow* app_window =
+      extensions::AppWindowClient::Get()->CreateAppWindow(context, extension);
+
+    extensions::AppWindow::CreateParams params;
+    std::string js_doc_start, js_doc_end;
+    nw::CalcNewWinParams(new_contents, &params, &js_doc_start, &js_doc_end);
+    nw::SetCurrentNewWinManifest(base::string16());
+    new_contents->GetMutableRendererPrefs()->
+      nw_inject_js_doc_start = js_doc_start;
+    new_contents->GetMutableRendererPrefs()->
+      nw_inject_js_doc_end = js_doc_end;
+    new_contents->GetRenderViewHost()->SyncRendererPrefs();
+
+    app_window->Init(new_contents->GetURL(),
+                   new extensions::AppWindowContentsImpl(app_window, new_contents),
+                   params);
+#endif
     return;
   }
   chrome::ScopedTabbedBrowserDisplayer displayer(

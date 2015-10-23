@@ -555,6 +555,13 @@ class CONTENT_EXPORT RenderFrameImpl
   void DidPause(blink::WebMediaPlayer* player) override;
   void PlayerGone(blink::WebMediaPlayer* player) override;
 
+  virtual void willHandleNavigationPolicy(
+                                          blink::WebFrame*,
+                                          const blink::WebURLRequest&,
+                                          blink::WebNavigationPolicy*,
+                                          blink::WebString* manifest = NULL,
+                                          bool new_win = true);
+
   // Make this frame show an empty, unscriptable page.
   // TODO(nasko): Remove this method once swapped out state is no longer used.
   void NavigateToSwappedOutURL();

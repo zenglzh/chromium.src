@@ -21,7 +21,8 @@
 
 namespace extensions {
 
-AppWindowContentsImpl::AppWindowContentsImpl(AppWindow* host) : host_(host) {}
+AppWindowContentsImpl::AppWindowContentsImpl(AppWindow* host, content::WebContents* web_contents)
+  :host_(host), web_contents_(web_contents) {}
 
 AppWindowContentsImpl::~AppWindowContentsImpl() {}
 
@@ -29,7 +30,8 @@ void AppWindowContentsImpl::Initialize(content::BrowserContext* context,
                                        const GURL& url) {
   url_ = url;
 
-  web_contents_.reset(
+  if (!web_contents_)
+    web_contents_.reset(
       content::WebContents::Create(content::WebContents::CreateParams(
           context, content::SiteInstance::CreateForURL(context, url_))));
 

@@ -262,4 +262,8 @@
   "ui/android/java/strings/android_ui_strings.grd": {},
 
   # Resource ids starting at 31000 are reserved for projects built on Chromium.
+  "chrome/browser/nwjs_resources.grd": {
+    "includes": [31000],
+    "structures": [31350],
+  },
 }

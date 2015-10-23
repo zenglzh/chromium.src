@@ -20,10 +20,23 @@
 #include "ui/aura/window.h"
 #endif
 
+#include "content/nw/src/browser/browser_view_layout.h"
+#include "content/nw/src/nw_content.h"
+
+using nw::BrowserViewLayout;
 using extensions::AppWindow;
+using extensions::Extension;
 
 namespace native_app_window {
 
+bool NativeAppWindowViews::ExecuteAppCommand(int command_id) {
+  const Extension* extension = app_window_->GetExtension();
+  if (extension && extension->is_nwjs_app()) {
+    return nw::ExecuteAppCommandHook(command_id, app_window_);
+  }
+  return false;
+}
+  
 NativeAppWindowViews::NativeAppWindowViews()
     : app_window_(NULL),
       web_view_(NULL),
@@ -306,6 +319,13 @@ void NativeAppWindowViews::RenderViewHostChanged(
 // views::View implementation.
 
 void NativeAppWindowViews::Layout() {
+#if defined(OS_LINUX)
+  const extensions::Extension* extension = app_window_->GetExtension();
+  if (extension && extension->is_nwjs_app()) {
+    views::WidgetDelegateView::Layout();
+    return;
+  }
+#endif
   DCHECK(web_view_);
   web_view_->SetBounds(0, 0, width(), height());
   OnViewWasResized();
@@ -314,9 +334,22 @@ void NativeAppWindowViews::Layout() {
 void NativeAppWindowViews::ViewHierarchyChanged(
     const ViewHierarchyChangedDetails& details) {
   if (details.is_add && details.child == this) {
+#if defined(OS_LINUX)
+    BrowserViewLayout* layout;
+    const extensions::Extension* extension = app_window_->GetExtension();
+    if (extension && extension->is_nwjs_app()) {
+      layout = new BrowserViewLayout();
+      SetLayoutManager(layout);
+    }
+#endif
     web_view_ = new views::WebView(NULL);
     AddChildView(web_view_);
     web_view_->SetWebContents(app_window_->web_contents());
+#if defined(OS_LINUX)
+    if (extension && extension->is_nwjs_app()) {
+      layout->set_web_view(web_view_);
+    }
+#endif
   }
 }
 

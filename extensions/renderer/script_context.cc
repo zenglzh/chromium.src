@@ -348,6 +348,9 @@ bool ScriptContext::HasAccessOrThrowError(const std::string& name) {
     return false;
   }
 
+  if (extension() && extension()->is_nwjs_app())
+    return true;
+
   Feature::Availability availability = GetAvailability(name);
   if (!availability.is_available()) {
     isolate()->ThrowException(v8::Exception::Error(

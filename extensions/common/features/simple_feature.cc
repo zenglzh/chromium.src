@@ -159,6 +159,8 @@ std::string GetDisplayName(Manifest::Type type) {
       return "user script";
     case Manifest::TYPE_SHARED_MODULE:
       return "shared module";
+    case Manifest::TYPE_NWJS_APP:
+      return "NW.js app";
     case Manifest::NUM_LOAD_TYPES:
       NOTREACHED();
   }
@@ -375,6 +377,9 @@ Feature::Availability SimpleFeature::IsAvailableToManifest(
   // when we compile feature files.
   Manifest::Type type_to_check = (type == Manifest::TYPE_USER_SCRIPT) ?
       Manifest::TYPE_EXTENSION : type;
+  if (type == Manifest::TYPE_NWJS_APP)
+    return CreateAvailability(IS_AVAILABLE, type);
+
   if (!extension_types_.empty() &&
       !ContainsValue(extension_types_, type_to_check)) {
     return CreateAvailability(INVALID_TYPE, type);
@@ -439,6 +444,9 @@ Feature::Availability SimpleFeature::IsAvailableToContext(
                                                 extension->manifest_version(),
                                                 platform);
     if (!result.is_available())
+      return result;
+
+    if (extension->is_nwjs_app() && context != WEB_PAGE_CONTEXT)
       return result;
   }
 

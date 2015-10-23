@@ -14,6 +14,7 @@
 namespace content {
 class BrowserContext;
 class RenderFrameHost;
+class WebContents;
 }
 
 namespace extensions {
@@ -26,7 +27,7 @@ struct DraggableRegion;
 class AppWindowContentsImpl : public AppWindowContents,
                               public content::WebContentsObserver {
  public:
-  explicit AppWindowContentsImpl(AppWindow* host);
+   explicit AppWindowContentsImpl(AppWindow* host, content::WebContents* web_contents = nullptr);
   ~AppWindowContentsImpl() override;
 
   // AppWindowContents

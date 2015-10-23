@@ -66,6 +66,7 @@ class NativeAppWindowViews : public extensions::NativeAppWindow,
   void set_window_for_testing(views::Widget* window) { widget_ = window; }
   void set_web_view_for_testing(views::WebView* view) { web_view_ = view; }
 
+  void layout_() { Layout(); }
  protected:
   // Initializes |widget_| for |app_window|.
   virtual void InitializeWindow(
@@ -96,6 +97,7 @@ class NativeAppWindowViews : public extensions::NativeAppWindow,
   void SetAlwaysOnTop(bool always_on_top) override;
 
   // WidgetDelegate implementation.
+  bool ExecuteAppCommand(int command_id) override;
   void OnWidgetMove() override;
   views::View* GetInitiallyFocusedView() override;
   bool CanResize() const override;

@@ -52,11 +52,11 @@ void ResourceBundle::LoadCommonResources() {
   // 2x images. The 1x data pack only has 1x images, thus passes in an accurate
   // scale factor to gfx::ImageSkia::AddRepresentation.
   AddDataPackFromPath(GetResourcesPakFilePath(
-      "chrome_100_percent.pak"), SCALE_FACTOR_100P);
+      "nw_100_percent.pak"), SCALE_FACTOR_100P);
 
   if (IsScaleFactorSupported(SCALE_FACTOR_200P)) {
     AddOptionalDataPackFromPath(GetResourcesPakFilePath(
-        "chrome_200_percent.pak"), SCALE_FACTOR_200P);
+        "nw_200_percent.pak"), SCALE_FACTOR_200P);
   }
 }
 

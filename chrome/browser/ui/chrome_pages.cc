@@ -298,9 +298,11 @@ void ShowContentSettings(Browser* browser,
                          ContentSettingsType content_settings_type) {
   ShowSettingsSubPage(
       browser,
-      kContentSettingsExceptionsSubPage + std::string(kHashMark) +
+      kContentSettingsExceptionsSubPage + std::string(kHashMark));
+#if 0
           options::ContentSettingsHandler::ContentSettingsTypeToGroupName(
               content_settings_type));
+#endif
 }
 
 void ShowClearBrowsingDataDialog(Browser* browser) {

@@ -100,6 +100,7 @@ class Dispatcher : public content::RenderProcessObserver,
                                 int world_id);
 
   void DidCreateDocumentElement(blink::WebLocalFrame* frame);
+  void DidFinishDocumentLoad(blink::WebLocalFrame* frame);
 
   void OnExtensionResponse(int request_id,
                            bool success,

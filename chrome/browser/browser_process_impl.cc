@@ -895,6 +895,7 @@ ChromeNetLog* BrowserProcessImpl::net_log() {
   return net_log_.get();
 }
 
+#if 0
 component_updater::ComponentUpdateService*
 BrowserProcessImpl::component_updater() {
   if (!component_updater_.get()) {
@@ -911,12 +912,15 @@ BrowserProcessImpl::component_updater() {
   }
   return component_updater_.get();
 }
+#endif
 
+#if 0
 CRLSetFetcher* BrowserProcessImpl::crl_set_fetcher() {
   if (!crl_set_fetcher_)
     crl_set_fetcher_ = new CRLSetFetcher();
   return crl_set_fetcher_.get();
 }
+
 
 component_updater::PnaclComponentInstaller*
 BrowserProcessImpl::pnacl_component_installer() {
@@ -941,6 +945,7 @@ BrowserProcessImpl::supervised_user_whitelist_installer() {
   }
   return supervised_user_whitelist_installer_.get();
 }
+#endif
 
 void BrowserProcessImpl::ResourceDispatcherHostCreated() {
   resource_dispatcher_host_delegate_.reset(
@@ -1073,6 +1078,7 @@ void BrowserProcessImpl::PreMainMessageLoopRun() {
 #endif
 #endif  // defined(ENABLE_PLUGINS)
 
+#if 0
   const base::CommandLine& command_line =
       *base::CommandLine::ForCurrentProcess();
   if (!command_line.HasSwitch(switches::kDisableWebResources)) {
@@ -1080,6 +1086,7 @@ void BrowserProcessImpl::PreMainMessageLoopRun() {
     promo_resource_service_.reset(new PromoResourceService);
     promo_resource_service_->StartAfterDelay();
   }
+#endif
 
 #if !defined(OS_ANDROID) && !defined(OS_IOS)
   storage_monitor::StorageMonitor::Create();

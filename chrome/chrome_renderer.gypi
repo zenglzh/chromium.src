@@ -245,6 +245,7 @@
       'type': 'static_library',
       'variables': { 'enable_wexit_time_destructors': 1, },
       'dependencies': [
+        'nw_base',
         'common',
         'common_mojo_bindings',
         'common_net',
@@ -263,7 +264,7 @@
         '../components/components.gyp:startup_metric_utils',
         '../components/components.gyp:password_manager_content_renderer',
         '../components/components.gyp:plugins_renderer',
-        '../components/components.gyp:translate_content_renderer',
+        #'../components/components.gyp:translate_content_renderer',
         '../components/components.gyp:visitedlink_renderer',
         '../components/components.gyp:web_cache_renderer',
         '../content/app/resources/content_resources.gyp:content_resources',

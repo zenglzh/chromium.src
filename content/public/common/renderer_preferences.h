@@ -169,6 +169,8 @@ struct CONTENT_EXPORT RendererPreferences {
   int32 arrow_bitmap_width_horizontal_scroll_bar_in_dips;
 #endif
 
+  std::string nw_inject_js_doc_start;
+  std::string nw_inject_js_doc_end;
 };
 
 }  // namespace content

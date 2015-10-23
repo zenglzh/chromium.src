@@ -206,6 +206,8 @@
 #include "content/common/media/media_stream_messages.h"
 #endif
 
+#include "content/nw/src/common/shell_switches.h"
+
 extern bool g_exited_main_message_loop;
 
 namespace content {
@@ -1210,6 +1212,7 @@ void RenderProcessHostImpl::PropagateBrowserCommandLineToRenderer(
   // Propagate the following switches to the renderer command line (along
   // with any associated values) if present in the browser command line.
   static const char* const kSwitchNames[] = {
+    switches::kEnableSpellChecking,
     switches::kAllowLoopbackInPeerConnection,
     switches::kAudioBufferSize,
     switches::kBlinkPlatformLogChannels,

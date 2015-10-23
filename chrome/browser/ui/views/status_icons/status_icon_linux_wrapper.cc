@@ -58,14 +58,14 @@ StatusIconLinuxWrapper* StatusIconLinuxWrapper::CreateWrappedStatusIcon(
 }
 
 void StatusIconLinuxWrapper::UpdatePlatformContextMenu(
-    StatusIconMenuModel* model) {
+    ui::MenuModel* model) {
   // If a menu already exists, remove ourself from its oberver list.
   if (menu_model_)
     menu_model_->RemoveObserver(this);
 
   status_icon_->UpdatePlatformContextMenu(model);
-  menu_model_ = model;
+  menu_model_ = static_cast<StatusIconMenuModel*>(model);
 
   if (model)
-    model->AddObserver(this);
+    menu_model_->AddObserver(this);
 }

@@ -1275,7 +1275,8 @@ void WebViewGuest::WebContentsCreated(WebContents* source_contents,
                                       int opener_render_frame_id,
                                       const std::string& frame_name,
                                       const GURL& target_url,
-                                      content::WebContents* new_contents) {
+                                      content::WebContents* new_contents,
+                                      const base::string16& nw_window_manifest) {
   auto guest = WebViewGuest::FromWebContents(new_contents);
   CHECK(guest);
   guest->SetOpener(this);

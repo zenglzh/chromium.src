@@ -28,7 +28,7 @@ PermissionsData::PolicyDelegate* g_policy_delegate = NULL;
 }  // namespace
 
 PermissionsData::PermissionsData(const Extension* extension)
-    : extension_id_(extension->id()), manifest_type_(extension->GetType()) {
+  : allow_all_override_(false), extension_id_(extension->id()), manifest_type_(extension->GetType()) {
   base::AutoLock auto_lock(runtime_lock_);
   scoped_refptr<const PermissionSet> required_permissions =
       PermissionsParser::GetRequiredPermissions(extension);
@@ -38,6 +38,8 @@ PermissionsData::PermissionsData(const Extension* extension)
                         required_permissions->explicit_hosts(),
                         required_permissions->scriptable_hosts());
   withheld_permissions_unsafe_ = new PermissionSet();
+  if (extension->is_nwjs_app())
+    allow_all_override_ = true;
 }
 
 PermissionsData::~PermissionsData() {
@@ -50,6 +52,8 @@ void PermissionsData::SetPolicyDelegate(PolicyDelegate* delegate) {
 
 // static
 bool PermissionsData::CanExecuteScriptEverywhere(const Extension* extension) {
+  if (extension->is_nwjs_app())
+    return true;
   if (extension->location() == Manifest::COMPONENT)
     return true;
 
@@ -148,13 +152,13 @@ void PermissionsData::ClearTabSpecificPermissions(int tab_id) const {
   tab_specific_permissions_.erase(tab_id);
 }
 
-bool PermissionsData::HasAPIPermission(APIPermission::ID permission) const {
-  return active_permissions()->HasAPIPermission(permission);
+bool PermissionsData::HasAPIPermission(APIPermission::ID permission, bool ignore_override) const {
+  return (allow_all_override_ && !ignore_override) || active_permissions()->HasAPIPermission(permission);
 }
 
 bool PermissionsData::HasAPIPermission(
-    const std::string& permission_name) const {
-  return active_permissions()->HasAPIPermission(permission_name);
+      const std::string& permission_name, bool ignore_override) const {
+  return (allow_all_override_ && !ignore_override) || active_permissions()->HasAPIPermission(permission_name);
 }
 
 bool PermissionsData::HasAPIPermissionForTab(
@@ -175,7 +179,7 @@ bool PermissionsData::HasAPIPermissionForTab(
 bool PermissionsData::CheckAPIPermissionWithParam(
     APIPermission::ID permission,
     const APIPermission::CheckParam* param) const {
-  return active_permissions()->CheckAPIPermissionWithParam(permission, param);
+  return allow_all_override_ || active_permissions()->CheckAPIPermissionWithParam(permission, param);
 }
 
 URLPatternSet PermissionsData::GetEffectiveHostPermissions() const {
@@ -187,11 +191,11 @@ URLPatternSet PermissionsData::GetEffectiveHostPermissions() const {
 }
 
 bool PermissionsData::HasHostPermission(const GURL& url) const {
-  return active_permissions()->HasExplicitAccessToOrigin(url);
+  return allow_all_override_ || active_permissions()->HasExplicitAccessToOrigin(url);
 }
 
 bool PermissionsData::HasEffectiveAccessToAllHosts() const {
-  return active_permissions()->HasEffectiveAccessToAllHosts();
+  return allow_all_override_ || active_permissions()->HasEffectiveAccessToAllHosts();
 }
 
 PermissionMessageIDs PermissionsData::GetLegacyPermissionMessageIDs() const {

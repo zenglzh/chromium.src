@@ -519,6 +519,16 @@ RenderFrameImpl::CreateRenderFrameImplFunction g_create_render_frame_impl =
 
 }  // namespace
 
+void RenderFrameImpl::willHandleNavigationPolicy(
+                                                blink::WebFrame* frame,
+                                                const blink::WebURLRequest& request,
+                                                blink::WebNavigationPolicy* policy,
+                                                blink::WebString* manifest,
+                                                bool new_win) {
+  GetContentClient()->renderer()
+    ->willHandleNavigationPolicy(render_view_.get(), frame, request, policy, manifest, new_win);
+}
+
 // static
 RenderFrameImpl* RenderFrameImpl::Create(RenderViewImpl* render_view,
                                          int32 routing_id) {

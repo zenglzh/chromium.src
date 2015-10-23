@@ -106,6 +106,11 @@ void ExtensionFrameHelper::DidCreateDocumentElement() {
       render_frame()->GetWebFrame());
 }
 
+void ExtensionFrameHelper::DidFinishDocumentLoad() {
+  extension_dispatcher_->DidFinishDocumentLoad(
+      render_frame()->GetWebFrame());
+}
+
 void ExtensionFrameHelper::DidCreateNewDocument() {
   did_create_current_document_element_ = false;
 }

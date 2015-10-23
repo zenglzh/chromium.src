@@ -222,6 +222,7 @@ class BrowserProcess {
 
   virtual ChromeNetLog* net_log() = 0;
 
+#if 0
   virtual component_updater::ComponentUpdateService* component_updater() = 0;
 
   virtual CRLSetFetcher* crl_set_fetcher() = 0;
@@ -231,7 +232,7 @@ class BrowserProcess {
 
   virtual component_updater::SupervisedUserWhitelistInstaller*
   supervised_user_whitelist_installer() = 0;
-
+#endif
   virtual MediaFileSystemRegistry* media_file_system_registry() = 0;
 
   virtual bool created_local_state() const = 0;

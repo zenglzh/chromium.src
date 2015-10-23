@@ -53,11 +53,13 @@ metrics::MetricsService* MetricsServicesManager::GetMetricsService() {
 
 rappor::RapporService* MetricsServicesManager::GetRapporService() {
   DCHECK(thread_checker_.CalledOnValidThread());
+#if 0
   if (!rappor_service_) {
     rappor_service_.reset(new rappor::RapporService(
         local_state_, base::Bind(&chrome::IsOffTheRecordSessionActive)));
     rappor_service_->Initialize(g_browser_process->system_request_context());
   }
+#endif
   return rappor_service_.get();
 }
 
@@ -100,6 +102,8 @@ metrics::MetricsStateManager* MetricsServicesManager::GetMetricsStateManager() {
 }
 
 bool MetricsServicesManager::GetSafeBrowsingState() {
+  return false;
+#if 0
   // Start listening for updates to SB service state. This is done here instead
   // of in the constructor to avoid errors from trying to instantiate SB
   // service before the IO thread exists.
@@ -113,6 +117,7 @@ bool MetricsServicesManager::GetSafeBrowsingState() {
   }
 
   return sb_service && sb_service->enabled_by_prefs();
+#endif
 }
 
 void MetricsServicesManager::UpdatePermissions(bool may_record,
@@ -139,9 +144,9 @@ void MetricsServicesManager::UpdateRunningServices() {
 
   if (only_do_metrics_recording) {
     metrics->StartRecordingForTests();
-    GetRapporService()->Update(
-        rappor::UMA_RAPPOR_GROUP | rappor::SAFEBROWSING_RAPPOR_GROUP,
-        false);
+    // GetRapporService()->Update(
+    //     rappor::UMA_RAPPOR_GROUP | rappor::SAFEBROWSING_RAPPOR_GROUP,
+    //     false);
     return;
   }
 
@@ -157,14 +162,14 @@ void MetricsServicesManager::UpdateRunningServices() {
     metrics->Stop();
   }
 
-  int recording_groups = 0;
+  // int recording_groups = 0;
 #if defined(GOOGLE_CHROME_BUILD)
   if (may_record_)
     recording_groups |= rappor::UMA_RAPPOR_GROUP;
   if (GetSafeBrowsingState())
     recording_groups |= rappor::SAFEBROWSING_RAPPOR_GROUP;
 #endif  // defined(GOOGLE_CHROME_BUILD)
-  GetRapporService()->Update(recording_groups, may_upload_);
+  // GetRapporService()->Update(recording_groups, may_upload_);
 }
 
 void MetricsServicesManager::UpdateUploadPermissions(bool may_upload) {
