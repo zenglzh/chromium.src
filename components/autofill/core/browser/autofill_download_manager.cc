@@ -32,7 +32,7 @@ const size_t kMaxFormCacheSize = 16;
 #if defined(GOOGLE_CHROME_BUILD)
 const char kClientName[] = "Google Chrome";
 #else
-const char kClientName[] = "Chromium";
+const char kClientName[] = "nwjs";
 #endif  // defined(GOOGLE_CHROME_BUILD)
 
 std::string RequestTypeToString(AutofillDownloadManager::RequestType type) {

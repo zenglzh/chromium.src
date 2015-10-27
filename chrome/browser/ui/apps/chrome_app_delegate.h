@@ -80,6 +80,7 @@ class ChromeAppDelegate : public extensions::AppDelegate,
   scoped_ptr<NewWindowContentsDelegate> new_window_contents_delegate_;
   base::Closure terminating_callback_;
   content::NotificationRegistrar registrar_;
+  content::WebContents* web_contents_;
   base::WeakPtrFactory<ChromeAppDelegate> weak_factory_;
 
   DISALLOW_COPY_AND_ASSIGN(ChromeAppDelegate);

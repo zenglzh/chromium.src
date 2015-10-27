@@ -141,7 +141,7 @@ Browser* CreateBrowser(Profile* profile) {
   }
 
   Browser* browser = chrome::GetLastActiveBrowser();
-  CHECK(browser);
+  //CHECK(browser);
   return browser;
 }
 
@@ -387,7 +387,7 @@ class AppControllerProfileObserver : public ProfileInfoCacheObserver {
   [self initMenuState];
 
   // Initialize the Profile menu.
-  [self initProfileMenu];
+  //[self initProfileMenu];
 }
 
 - (void)unregisterEventHandlers {
@@ -741,7 +741,7 @@ class AppControllerProfileObserver : public ProfileInfoCacheObserver {
 
   // If enabled, keep Chrome alive when apps are open instead of quitting all
   // apps.
-  quitWithAppsController_ = new QuitWithAppsController();
+  // quitWithAppsController_ = new QuitWithAppsController();
 
   // Dynamically update shortcuts for "Close Window" and "Close Tab" menu items.
   [[closeTabMenuItem_ menu] setDelegate:self];
@@ -1488,6 +1488,7 @@ class AppControllerProfileObserver : public ProfileInfoCacheObserver {
   if (profilesAdded)
     [dockMenu addItem:[NSMenuItem separatorItem]];
 
+#if 0
   NSString* titleStr = l10n_util::GetNSStringWithFixup(IDS_NEW_WINDOW_MAC);
   base::scoped_nsobject<NSMenuItem> item(
       [[NSMenuItem alloc] initWithTitle:titleStr
@@ -1512,6 +1513,7 @@ class AppControllerProfileObserver : public ProfileInfoCacheObserver {
     [item setEnabled:[self validateUserInterfaceItem:item]];
     [dockMenu addItem:item];
   }
+#endif
 
   // TODO(rickcam): Mock out BackgroundApplicationListModel, then add unit
   // tests which use the mock in place of the profile-initialized model.

@@ -385,7 +385,7 @@ void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
   PushMessagingServiceImpl::RegisterProfilePrefs(registry);
   HostContentSettingsMap::RegisterProfilePrefs(registry);
   IncognitoModePrefs::RegisterProfilePrefs(registry);
-  InstantUI::RegisterProfilePrefs(registry);
+  //InstantUI::RegisterProfilePrefs(registry);
   NavigationCorrectionTabObserver::RegisterProfilePrefs(registry);
   MediaCaptureDevicesDispatcher::RegisterProfilePrefs(registry);
   MediaDeviceIDSalt::RegisterProfilePrefs(registry);

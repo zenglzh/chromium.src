@@ -9,6 +9,8 @@ vars = {
     '565d04e8741429fb1b4f26d102f2c6c3b849edeb',
   'chromium_git':
     'https://chromium.googlesource.com',
+  'nwjs_git':
+    'https://github.com/nwjs',
   'google_toolbox_for_mac_revision':
     'ce47a231ea0b238fbe95538e86cc61d74c234be6',
   'googlecode_url':
@@ -161,8 +163,14 @@ deps = {
     (Var("chromium_git")) + '/chromium/deps/acid3.git@6be0a66a1ebd7ebc5abc1b2f405a945f6d871521',
   'src/tools/swarming_client':
     (Var("chromium_git")) + '/external/swarming.client.git@2866a22530cb65feae5d9f64c83636aed5391d06',
+  #'src/v8':
+  #  (Var("chromium_git")) + '/v8/v8.git@3b00385a93215ce2a2af737fbea95309b40f08d9'
   'src/v8':
-    (Var("chromium_git")) + '/v8/v8.git@3b00385a93215ce2a2af737fbea95309b40f08d9'
+    (Var("nwjs_git")) + '/v8.git@nw13',
+  'src/content/nw':
+    (Var("nwjs_git")) + '/nw.js.git@nw13',
+  'src/third_party/node':
+    (Var("nwjs_git")) + '/node.git@nw13',
 }
 
 deps_os = {
@@ -668,6 +676,17 @@ hooks = [
       '.',
     'name':
       'remove_stale_pyc_files'
+  },
+  {
+    'action': [
+      'python',
+      'src/content/nw/tools/patcher.py',
+      '--patch-config', 'src/content/nw/patch/patch.cfg'
+    ],
+    'pattern':
+      '.',
+    'name':
+      'nw_patch'
   },
   {
     'action': [

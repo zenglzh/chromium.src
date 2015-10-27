@@ -142,6 +142,8 @@ class BASE_EXPORT CommandLine {
 
   // Returns the original command line string as a vector of strings.
   const StringVector& argv() const { return argv_; }
+  int argc0() { return argc0_; }
+  char** argv0() { return argv0_; }
 
   // Get and Set the program part of the command line string (the first item).
   FilePath GetProgram() const;
@@ -244,6 +246,9 @@ class BASE_EXPORT CommandLine {
 
   // The index after the program and switches, any arguments start here.
   size_t begin_args_;
+
+  int argc0_;
+  char** argv0_;
 };
 
 }  // namespace base

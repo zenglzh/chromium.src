@@ -45,12 +45,12 @@ void ResourceBundle::LoadCommonResources() {
 
   if (IsScaleFactorSupported(SCALE_FACTOR_100P)) {
     AddDataPackFromPath(
-        GetResourcesPakFilePath("chrome_100_percent.pak"),
+        GetResourcesPakFilePath("nw_100_percent.pak"),
         SCALE_FACTOR_100P);
   }
   if (IsScaleFactorSupported(SCALE_FACTOR_200P)) {
     AddDataPackFromPath(
-        GetResourcesPakFilePath("chrome_200_percent.pak"),
+        GetResourcesPakFilePath("nw_200_percent.pak"),
         SCALE_FACTOR_200P);
   }
 }

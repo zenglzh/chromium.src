@@ -64,6 +64,7 @@ const char* const kCommonSwitches[] = {
   "metrics-recording-only"
 };
 
+#if 0
 const char* const kDesktopSwitches[] = {
   "disable-hang-monitor",
   "disable-prompt-on-repost",
@@ -82,6 +83,7 @@ const char* const kDesktopSwitches[] = {
   "use-mock-keychain",
   "test-type=webdriver"
 };
+#endif
 
 const char* const kAndroidSwitches[] = {
   "disable-fre",
@@ -133,8 +135,10 @@ Status PrepareCommandLine(uint16 port,
 
   for (const auto& common_switch : kCommonSwitches)
     switches.SetUnparsedSwitch(common_switch);
+#if 0 //FIXME if enabled, chromedriver cannot find chrome on windows
   for (const auto& desktop_switch : kDesktopSwitches)
     switches.SetUnparsedSwitch(desktop_switch);
+#endif
   switches.SetSwitch("remote-debugging-port", base::IntToString(port));
   for (const auto& excluded_switch : capabilities.exclude_switches) {
     switches.RemoveSwitch(excluded_switch);
@@ -146,7 +150,7 @@ Status PrepareCommandLine(uint16 port,
     user_data_dir_path = base::FilePath(
         switches.GetSwitchValueNative("user-data-dir"));
   } else {
-    command.AppendArg("data:,");
+    //command.AppendArg("data:,");
     if (!user_data_dir->CreateUniqueTempDir())
       return Status(kUnknownError, "cannot create temp dir for user data dir");
     switches.SetSwitch("user-data-dir", user_data_dir->path().value());
@@ -208,7 +212,7 @@ Status WaitForDevToolsAndCheckVersion(
     WebViewsInfo views_info;
     client->GetWebViewsInfo(&views_info);
     for (size_t i = 0; i < views_info.GetSize(); ++i) {
-      if (views_info.Get(i).type == WebViewInfo::kPage) {
+      if (views_info.Get(i).type == WebViewInfo::kApp) {
         *user_client = client.Pass();
         return Status(kOk);
       }

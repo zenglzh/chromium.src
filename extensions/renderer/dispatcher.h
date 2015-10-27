@@ -105,6 +105,7 @@ class Dispatcher : public content::RenderProcessObserver,
   static void WillDestroyServiceWorkerContextOnWorkerThread(const GURL& url);
 
   void DidCreateDocumentElement(blink::WebLocalFrame* frame);
+  void DidFinishDocumentLoad(blink::WebLocalFrame* frame);
 
   void OnExtensionResponse(int request_id,
                            bool success,
