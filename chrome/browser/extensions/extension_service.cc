@@ -101,6 +101,8 @@
 #include "storage/browser/fileapi/file_system_context.h"
 #endif
 
+#include "content/nw/src/nw_content.h"
+
 using content::BrowserContext;
 using content::BrowserThread;
 using content::DevToolsAgentHost;
@@ -272,7 +274,7 @@ ExtensionService::ExtensionService(Profile* profile,
                                    bool autoupdate_enabled,
                                    bool extensions_enabled,
                                    extensions::OneShotEvent* ready)
-    : extensions::Blacklist::Observer(blacklist),
+    :
       profile_(profile),
       system_(extensions::ExtensionSystem::Get(profile)),
       extension_prefs_(extension_prefs),
@@ -304,6 +306,8 @@ ExtensionService::ExtensionService(Profile* profile,
   registrar_.Add(this,
                  extensions::NOTIFICATION_EXTENSION_PROCESS_TERMINATED,
                  content::NotificationService::AllBrowserContextsAndSources());
+  registrar_.Add(this, content::NOTIFICATION_RENDERER_PROCESS_CLOSED,
+                 content::NotificationService::AllBrowserContextsAndSources());
   registrar_.Add(this, content::NOTIFICATION_RENDERER_PROCESS_TERMINATED,
                  content::NotificationService::AllBrowserContextsAndSources());
   registrar_.Add(this, chrome::NOTIFICATION_UPGRADE_RECOMMENDED,
@@ -314,8 +318,8 @@ ExtensionService::ExtensionService(Profile* profile,
 
   extensions::ExtensionManagementFactory::GetForBrowserContext(profile_)
       ->AddObserver(this);
-
-  // Set up the ExtensionUpdater.
+#if 0
+  // Set up the ExtensionUpdater
   if (autoupdate_enabled) {
     int update_frequency = extensions::kDefaultUpdateFrequencySeconds;
     if (command_line->HasSwitch(switches::kExtensionsUpdateFrequency)) {
@@ -333,17 +337,18 @@ ExtensionService::ExtensionService(Profile* profile,
         base::Bind(ChromeExtensionDownloaderFactory::CreateForProfile,
                    profile)));
   }
-
+#endif
   component_loader_.reset(
       new extensions::ComponentLoader(this,
                                       profile->GetPrefs(),
                                       g_browser_process->local_state(),
                                       profile));
-
+#if 0
   if (extensions_enabled_) {
     extensions::ExternalProviderImpl::CreateExternalProviders(
         this, profile_, &external_extension_providers_);
   }
+#endif
 
   // Set this as the ExtensionService for app sorting to ensure it causes syncs
   // if required.
@@ -1445,7 +1450,6 @@ void ExtensionService::OnLoadedInstalledExtensions() {
   if (updater_)
     updater_->Start();
 
-  OnBlacklistUpdated();
 }
 
 void ExtensionService::AddExtension(const Extension* extension) {
@@ -2244,6 +2248,12 @@ void ExtensionService::Observe(int type,
                                 AsWeakPtr(), host->extension()->id()));
       break;
     }
+    case content::NOTIFICATION_RENDERER_PROCESS_CLOSED: {
+      content::RenderProcessHost* process =
+          content::Source<content::RenderProcessHost>(source).ptr();
+      nw::RendererProcessTerminatedHook(process, details);
+      break;
+    }
     case content::NOTIFICATION_RENDERER_PROCESS_TERMINATED: {
       content::RenderProcessHost* process =
           content::Source<content::RenderProcessHost>(source).ptr();
@@ -2416,11 +2426,13 @@ void ExtensionService::MaybeFinishDelayedInstallations() {
   }
 }
 
+#if 0
 void ExtensionService::OnBlacklistUpdated() {
   blacklist_->GetBlacklistedIDs(
       registry_->GenerateInstalledExtensionsSet()->GetIDs(),
       base::Bind(&ExtensionService::ManageBlacklist, AsWeakPtr()));
 }
+#endif
 
 void ExtensionService::ManageBlacklist(
     const extensions::Blacklist::BlacklistStateMap& state_map) {

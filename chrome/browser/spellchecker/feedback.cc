@@ -23,7 +23,7 @@
 
 namespace spellcheck {
 
-Feedback::Feedback() {}
+Feedback::Feedback() : empty_hash_collection_(HashCollection()) {}
 
 Feedback::~Feedback() {}
 

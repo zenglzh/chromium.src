@@ -9,7 +9,7 @@ namespace extensions {
 CoalescedPermissionMessage::CoalescedPermissionMessage(
     const base::string16& message,
     const PermissionIDSet& permissions)
-    : message_(message), permissions_(permissions) {
+    : message_(message), permissions_(permissions), submessages_() {
 }
 
 CoalescedPermissionMessage::CoalescedPermissionMessage(

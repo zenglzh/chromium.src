@@ -418,6 +418,10 @@ bool Extension::is_platform_app() const {
   return manifest()->is_platform_app();
 }
 
+bool Extension::is_nwjs_app() const {
+  return manifest()->is_nwjs_app();
+}
+
 bool Extension::is_hosted_app() const {
   return manifest()->is_hosted_app();
 }
@@ -576,6 +580,10 @@ bool Extension::LoadName(base::string16* error) {
 
 bool Extension::LoadVersion(base::string16* error) {
   std::string version_str;
+  if (manifest_->type() == Manifest::TYPE_NWJS_APP) {
+    version_.reset(new Version("0.1"));
+    return true;
+  }
   if (!manifest_->GetString(keys::kVersion, &version_str)) {
     *error = base::ASCIIToUTF16(errors::kInvalidVersion);
     return false;
@@ -656,6 +664,7 @@ bool Extension::LoadExtent(const char* key,
       return false;
     }
 
+#if 0
     // Do not allow authors to claim "<all_urls>".
     if (pattern.match_all_urls()) {
       *error = ErrorUtils::FormatErrorMessageUTF16(
@@ -683,6 +692,7 @@ bool Extension::LoadExtent(const char* key,
           errors::kNoWildCardsInPaths);
       return false;
     }
+#endif
     pattern.SetPath(pattern.path() + '*');
 
     extent->AddPattern(pattern);

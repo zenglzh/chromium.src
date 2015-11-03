@@ -53,9 +53,16 @@ typedef void (*RelaunchChromeBrowserWithNewCommandLineIfNeededFunc)();
 base::LazyInstance<chrome::ChromeCrashReporterClient>::Leaky
     g_chrome_crash_client = LAZY_INSTANCE_INITIALIZER;
 
+#define BUFSIZE MAX_PATH
+
 // Loads |module| after setting the CWD to |module|'s directory. Returns a
 // reference to the loaded module on success, or null on error.
 HMODULE LoadModuleWithDirectory(const base::FilePath& module, bool pre_read) {
+  bool restore_directory = false;
+  TCHAR Buffer[BUFSIZE];
+  if (::GetCurrentDirectoryW(BUFSIZE, Buffer)) {
+    restore_directory = true;
+  }
   ::SetCurrentDirectoryW(module.DirName().value().c_str());
 
   if (pre_read) {
@@ -67,8 +74,12 @@ HMODULE LoadModuleWithDirectory(const base::FilePath& module, bool pre_read) {
                                         kStepSize);
   }
 
-  return ::LoadLibraryExW(module.value().c_str(), nullptr,
+  HMODULE ret = ::LoadLibraryExW(module.value().c_str(), nullptr,
                           LOAD_WITH_ALTERED_SEARCH_PATH);
+  if (restore_directory)
+    ::SetCurrentDirectory(Buffer);
+
+  return ret;
 }
 
 void RecordDidRun(const base::FilePath& dll_path) {
@@ -146,14 +157,14 @@ HMODULE MainDllLoader::Load(base::string16* version, base::FilePath* module) {
   if (!dll) {
     base::string16 version_string(GetCurrentModuleVersion());
     if (version_string.empty()) {
-      LOG(ERROR) << "No valid Chrome version found";
+      LOG(ERROR) << "No valid NW.js version found";
       return nullptr;
     }
     *version = version_string;
     *module = module_dir.Append(version_string).Append(dll_name);
     dll = LoadModuleWithDirectory(*module, pre_read);
     if (!dll) {
-      PLOG(ERROR) << "Failed to load Chrome DLL from " << module->value();
+      PLOG(ERROR) << "Failed to load NW.js DLL from " << module->value();
       return nullptr;
     }
   }

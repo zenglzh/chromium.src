@@ -32,6 +32,7 @@
 #include "content/public/browser/resource_request_info.h"
 #include "crypto/secure_hash.h"
 #include "crypto/sha2.h"
+#include "extensions/browser/component_extension_resource_manager.h"
 #include "extensions/browser/content_verifier.h"
 #include "extensions/browser/content_verify_job.h"
 #include "extensions/browser/extensions_browser_client.h"

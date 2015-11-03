@@ -290,7 +290,7 @@ bool HonorRequestAndReply(int reply_fd,
   }
   if (!have_to_reply)
     return false;
-  const std::vector<int> empty;  // We never send file descriptors back.
+  const std::vector<int> empty = std::vector<int>();  // We never send file descriptors back.
   if (!base::UnixDomainSocket::SendMsg(reply_fd, write_pickle.data(),
                                        write_pickle.size(), empty)) {
     LOG(ERROR) << "*** send() to zygote failed";
@@ -479,7 +479,7 @@ int main(int argc, char* argv[]) {
   nacl_sandbox->InitializeLayerOneSandbox();
   CHECK_EQ(is_init_process, nacl_sandbox->layer_one_enabled());
 
-  const std::vector<int> empty;
+  const std::vector<int> empty = std::vector<int>();
   // Send the zygote a message to let it know we are ready to help
   if (!base::UnixDomainSocket::SendMsg(kNaClZygoteDescriptor,
                                        kNaClHelperStartupAck,

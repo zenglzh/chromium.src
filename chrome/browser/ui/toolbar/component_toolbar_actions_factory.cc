@@ -78,8 +78,10 @@ ComponentToolbarActionsFactory::GetComponentToolbarActions(Browser* browser) {
   // should be okay. If this changes, we should rethink this design to have,
   // e.g., RegisterChromeAction().
 
+#if defined(NWJS_SDK)
   if (switches::MediaRouterEnabled() && !browser->profile()->IsOffTheRecord())
     component_actions.push_back(new MediaRouterAction(browser));
+#endif
 
   return component_actions.Pass();
 }

@@ -21,14 +21,17 @@
 
 namespace message_center {
 void WebNotificationTray::OnBalloonClicked() {
+#if 0
   chrome::ScopedTabbedBrowserDisplayer displayer(
       ProfileManager::GetLastUsedProfileAllowedByPolicy(),
       chrome::GetActiveDesktop());
   chrome::ShowSingletonTab(displayer.browser(),
                            GURL(chrome::kNotificationsHelpURL));
+#endif
 }
 
 void WebNotificationTray::DisplayFirstRunBalloon() {
+#if 0
   // We should never be calling DisplayFirstRunBalloon without a status icon.
   // The status icon must have been created before this call.
   DCHECK(status_icon_);
@@ -53,11 +56,14 @@ void WebNotificationTray::DisplayFirstRunBalloon() {
       sized_app_icon_skia,
       l10n_util::GetStringUTF16(IDS_MESSAGE_CENTER_BALLOON_TITLE),
       l10n_util::GetStringUTF16(IDS_MESSAGE_CENTER_BALLOON_TEXT));
+#endif
 }
 
 void WebNotificationTray::EnforceStatusIconVisible() {
+#if 0
   DCHECK(status_icon_);
   status_icon_->ForceVisible();
+#endif
 }
 
 }  // namespace message_center

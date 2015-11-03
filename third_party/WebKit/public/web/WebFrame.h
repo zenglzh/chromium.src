@@ -683,8 +683,9 @@ public:
     // the given element is not a frame, iframe or if the frame is empty.
     BLINK_EXPORT static WebFrame* fromFrameOwnerElement(const WebElement&);
 
-#if BLINK_IMPLEMENTATION
     static WebFrame* fromFrame(Frame*);
+
+#if BLINK_IMPLEMENTATION
 
     bool inShadowTree() const { return m_scope == WebTreeScopeType::Shadow; }
 

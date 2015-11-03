@@ -60,13 +60,13 @@ void SpellCheckerSubMenuObserver::InitMenu(
         l10n_util::GetDisplayNameForLocale(languages_[i], app_locale, true),
         language_group_);
   }
-
   // Add an item that opens the 'fonts and languages options' page.
   submenu_model_.AddSeparator(ui::NORMAL_SEPARATOR);
+#if 0
   submenu_model_.AddItemWithStringId(
       IDC_CONTENT_CONTEXT_LANGUAGE_SETTINGS,
       IDS_CONTENT_CONTEXT_LANGUAGE_SETTINGS);
-
+#endif
   if (num_selected_languages_ > 0) {
     // Add a 'Check spelling while typing' item in the sub menu.
     submenu_model_.AddCheckItem(

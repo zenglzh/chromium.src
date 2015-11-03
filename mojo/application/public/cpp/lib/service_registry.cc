@@ -31,6 +31,7 @@ ServiceRegistry::ServiceRegistry(
 
 ServiceRegistry::ServiceRegistry()
     : local_binding_(this),
+      allowed_interfaces_(),
       allow_all_interfaces_(true),
       weak_factory_(this) {
 }

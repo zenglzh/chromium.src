@@ -7,7 +7,7 @@
 #if defined(GOOGLE_CHROME_BUILD)
 #define PRODUCT_STRING_PATH L"Google\\Chrome"
 #elif defined(CHROMIUM_BUILD)
-#define PRODUCT_STRING_PATH L"Chromium"
+#define PRODUCT_STRING_PATH L"nwjs"
 #else
 #error Unknown branding
 #endif
@@ -15,7 +15,7 @@
 #if defined(GOOGLE_CHROME_BUILD)
 const wchar_t kAppDataDirName[] = L"Google\\Chrome";
 #else
-const wchar_t kAppDataDirName[] = L"Chromium";
+const wchar_t kAppDataDirName[] = L"nwjs";
 #endif
 const wchar_t kCanaryAppDataDirName[] = L"Google\\Chrome SxS";
 const wchar_t kLocalStateFilename[] = L"Local State";
